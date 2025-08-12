@@ -8,12 +8,12 @@
 - run `bun i` in the root directory
 
 # create executable
-- `bun build ./index.ts --compile --outfile khoutsider`
+- `bun build ./src/cli.ts --compile --outfile khoutsider`
 
 # using
-- if youve created an executable run (remove .exe on linux)
+- if youve created an executable run (add .exe on windows)
 
-   `khoutsider.exe --url https://downloads.khinsider.com/game-soundtracks/album/[ album to be downloaded ]`
+   `khoutsider --url https://downloads.khinsider.com/game-soundtracks/album/[ album to be downloaded ]`
 - else run
 
   `bun run .\index.ts --url https://downloads.khinsider.com/game-soundtracks/album/[ album to be downloaded ]`

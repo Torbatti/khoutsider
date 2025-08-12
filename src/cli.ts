@@ -2,9 +2,7 @@
 // USAGE(AABI) 8/12/2025: khoutsider --url [url]
 // 
 // NOTE(AABI): learn more about cheerio -> https://cheerio.js.org/docs/intro 
-// NOTE(AABI): learn more about got -> https://github.com/sindresorhus/got/blob/main/documentation/quick-start.md 
 // NOTE(AABI): learn more about bun argv -> https://bun.com/guides/process/argv 
-import got from 'got';
 import * as cheerio from 'cheerio';
 import { parseArgs } from "util";
 
@@ -39,15 +37,16 @@ async function main() {
     // NOTE(AABI): Download url html body 
     const main_url = values.url.toString();
     const url_origin = new URL("blob:" + main_url).origin;
-    const main_response = await got(main_url);
+
+    const main_response = await fetch(main_url);
 
     // NOTE(AABI): extracting music link elements 
-    const $main = cheerio.load(main_response.body)
+    const $main = cheerio.load(await main_response.text())
     const $table_links = $main(".playlistDownloadSong a");
 
     // TODO(AABI): deleting old download file
     // await Bun.file("download.txt").delete();
-    
+
     // NOTE(AABI): init file writer
     const file = Bun.file("download.txt");
     const writer = file.writer();
@@ -56,14 +55,18 @@ async function main() {
     let i = 0
     while (i < $table_links.length) {
         const song_url = url_origin.toString() + $table_links[i]?.attribs.href?.toString();
-        const song_response = await got(song_url);
+
+        const song_response = await fetch(song_url);
 
         // NOTE(AABI): extracting download link elements 
-        const $ = cheerio.load(song_response.body)
+        const $ = cheerio.load(await song_response.text())
         const $audio = $('audio#audio');
         const audio_src = $audio.attr()?.src;
-        if (audio_src != undefined)
+        if (audio_src != undefined){
+            console.log(audio_src?.toString())
             writer.write(audio_src?.toString() + "\n")
+        }
+        
         i++
     }
 

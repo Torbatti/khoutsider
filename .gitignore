@@ -7,6 +7,7 @@ dist
 *.tgz
 khoutsider
 khoutsider.exe
+download.txt
 
 # code coverage
 coverage
